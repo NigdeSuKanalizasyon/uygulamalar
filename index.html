@@ -1,0 +1,935 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Uygulamalar</title>
+  <meta name="description" content="Niğde Belediyesi Su ve Kanalizasyon Müdürlüğü uygulamaları">
+
+  <!-- Telefonda "Ana ekrana ekle" denince çıkan simge ve ad -->
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="simge-192.png">
+  <link rel="apple-touch-icon" href="simge-180.png">
+  <meta name="theme-color" content="#1F6B4F">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Uygulamalar">
+
+  <!-- Yazı tipleri. İnternet yoksa bilgisayarın kendi yazı tipine düşer, sayfa yine çalışır. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ================= Renkler ================= */
+    :root {
+      --zemin: #F3F6F4;
+      --yuzey: #FFFFFF;
+      --murekkep: #16302B;
+      --soluk: #5A6E68;
+      --boru: #1F6B4F;          /* ana yeşil: boru hattı, seçili sekme */
+      --dugum: #C49A2C;         /* altın: bağlantı noktaları */
+      --cizgi: #D5DED9;
+      --vurgu-zemin: #E6F0EB;
+      --simge-zemin: #1F6B4F;   /* indirilen uygulamaların simge zemini */
+      --dugme-zemin: #1F6B4F;
+      --dugme-yazi: #FFFFFF;
+      --odak: #2B7A9E;
+      --bildirim-zemin: #16302B;
+      --bildirim-yazi: #FFFFFF;
+      color-scheme: light;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --zemin: #0F1C19;
+        --yuzey: #152622;
+        --murekkep: #E6EEEA;
+        --soluk: #9DB0A9;
+        --boru: #3FA27A;
+        --dugum: #D9B04A;
+        --cizgi: #24392F;
+        --vurgu-zemin: #1B3029;
+        --simge-zemin: #1F6B4F;
+        --dugme-zemin: #3FA27A;
+        --dugme-yazi: #0F1C19;
+        --odak: #6CB8D8;
+        --bildirim-zemin: #E6EEEA;
+        --bildirim-yazi: #0F1C19;
+        color-scheme: dark;
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+    body {
+      background: var(--zemin);
+      color: var(--murekkep);
+      font-family: "Figtree", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      font-size: 17px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    body.uygulama-acik { overflow: hidden; }
+    button { font: inherit; color: inherit; cursor: pointer; }
+    [hidden] { display: none !important; }
+    :focus-visible { outline: 3px solid var(--odak); outline-offset: 3px; }
+
+    /* ================= Ana sayfa ================= */
+    .sayfa {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: max(32px, calc(env(safe-area-inset-top) + 16px)) 20px calc(110px + env(safe-area-inset-bottom));
+    }
+
+    .baslik {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    /* Logo kendi renkleriyle durur; koyu temada beyaz bir zemin üstünde gösterilir */
+    .logo {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      flex: none;
+      background: #FFFFFF;
+      border-radius: 14px;
+      padding: 5px;
+    }
+    .kurum {
+      margin: 0 0 2px;
+      font-size: 14px;
+      color: var(--soluk);
+    }
+    h1 {
+      margin: 0;
+      font-family: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+      font-weight: 700;
+      font-size: clamp(30px, 7.5vw, 40px);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+    }
+
+    /* ---------- Uygulamalarım: telefon ana ekranı gibi simge ızgarası ---------- */
+    .izgara {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+      gap: 22px 10px;
+    }
+    .kutucuk {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 2px;
+      background: none;
+      border: 0;
+      border-radius: 16px;
+    }
+    .kutucuk .simge {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: var(--simge-zemin);
+      color: #FFFFFF;
+      font-size: 28px;
+    }
+    .kutucuk .simge svg { width: 32px; height: 32px; }
+    .kutucuk:active .simge { transform: scale(.94); }
+    .kutucuk-ad {
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.25;
+      text-align: center;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    /* Chrome'da açılan uygulamanın köşesindeki küçük işaret */
+    .disari-isaret {
+      position: absolute;
+      right: -6px;
+      top: -6px;
+      width: 24px;
+      height: 24px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--yuzey);
+      color: var(--murekkep);
+      box-shadow: 0 0 0 2px var(--zemin);
+    }
+    .disari-isaret svg { width: 14px; height: 14px; }
+
+    /* ---------- Mağaza: ana borudan ayrılan kollar ---------- */
+    .hat {
+      list-style: none;
+      margin: 0;
+      padding: 8px 0;
+      position: relative;
+    }
+    .hat::before {
+      content: "";
+      position: absolute;
+      left: 11px;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      border-radius: 2px;
+      background: var(--boru);
+    }
+    .hat li { position: relative; padding-left: 44px; }
+    .hat li + li { margin-top: 12px; }
+    .hat li::before {               /* kol */
+      content: "";
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      width: 31px;
+      height: 4px;
+      margin-top: -2px;
+      background: var(--boru);
+    }
+    .hat li::after {                /* düğüm: içi boş = indirilmedi, dolu = indirildi */
+      content: "";
+      position: absolute;
+      left: 5px;
+      top: 50%;
+      width: 16px;
+      height: 16px;
+      margin-top: -8px;
+      border-radius: 50%;
+      background: var(--zemin);
+      border: 4px solid var(--dugum);
+      transition: background-color 240ms;
+    }
+    .hat li.indirildi::after { background: var(--dugum); }
+
+    .kart {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-height: 80px;
+      padding: 14px 14px 14px 14px;
+      background: var(--yuzey);
+      border: 1px solid var(--cizgi);
+      border-radius: 14px;
+    }
+    .kart .simge {
+      width: 46px;
+      height: 46px;
+      border-radius: 12px;
+      background: var(--vurgu-zemin);
+      color: var(--boru);
+      font-size: 22px;
+    }
+    .kart .simge svg { width: 26px; height: 26px; }
+    .yazi { flex: 1; min-width: 0; }
+    .ad {
+      display: block;
+      font-weight: 600;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+    .aciklama, .not {
+      display: block;
+      margin-top: 3px;
+      font-size: 15px;
+      color: var(--soluk);
+    }
+    .not { font-size: 13px; margin-top: 4px; }
+
+    .eylemler {
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 2px;
+    }
+    .dugme {
+      min-height: 40px;
+      min-width: 76px;
+      padding: 8px 18px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--dugme-zemin);
+      color: var(--dugme-yazi);
+      font-weight: 600;
+      font-size: 16px;
+    }
+    .dugme-acik {
+      background: var(--vurgu-zemin);
+      color: var(--boru);
+    }
+    .dugme-yazi {
+      min-height: 36px;
+      padding: 4px 10px;
+      border: 0;
+      background: none;
+      color: var(--soluk);
+      font-size: 14px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ---------- "Yükle" şeridi: tarayıcıdan açılınca, yüklenmemişse görünür ---------- */
+    .yukle-serit {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 24px;
+      padding: 14px 14px 14px 14px;
+      border-radius: 14px;
+      background: var(--vurgu-zemin);
+      border: 1px solid var(--cizgi);
+    }
+    .yukle-serit img {
+      flex: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+    }
+    .yukle-serit .yazi strong { display: block; font-size: 16px; line-height: 1.25; }
+    .yukle-serit .yazi span { display: block; margin-top: 2px; font-size: 14px; color: var(--soluk); }
+    .yukle-serit .eylemler { align-items: center; }
+
+    /* Ortak simge kutusu */
+    .simge {
+      flex: none;
+      display: grid;
+      place-items: center;
+      font-family: "Bricolage Grotesque", system-ui, sans-serif;
+      font-weight: 700;
+    }
+
+    /* Boş liste ve hata kutusu */
+    .bos {
+      padding: 22px 20px;
+      border: 1px dashed var(--cizgi);
+      border-radius: 14px;
+      background: var(--yuzey);
+    }
+    .bos strong { display: block; font-size: 18px; margin-bottom: 4px; }
+    .bos p { margin: 0 0 14px; color: var(--soluk); }
+    .bos p:last-child { margin-bottom: 0; }
+
+    /* ---------- Alt menü ---------- */
+    .alt-menu {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      background: var(--yuzey);
+      border-top: 1px solid var(--cizgi);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+    .alt-menu-ic {
+      max-width: 640px;
+      margin: 0 auto;
+      display: flex;
+    }
+    .alt-menu button {
+      flex: 1;
+      min-height: 64px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      background: none;
+      border: 0;
+      color: var(--soluk);
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .alt-menu button svg { width: 26px; height: 26px; }
+    .alt-menu button[aria-current="page"] { color: var(--boru); font-weight: 600; }
+    .alt-menu button:focus-visible { outline-offset: -4px; }
+
+    /* ================= Uygulama görüntüleyici ================= */
+    .goruntuleyici {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      background: var(--zemin);
+    }
+    .ust-cubuk {
+      flex: none;
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-height: calc(52px + env(safe-area-inset-top));
+      padding: env(safe-area-inset-top) 12px 0 4px;
+      background: #1F6B4F;
+      color: #FFFFFF;
+    }
+    .geri {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      min-height: 44px;
+      padding: 0 12px 0 6px;
+      background: none;
+      border: 0;
+      border-radius: 10px;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .geri svg { width: 24px; height: 24px; }
+    .geri:focus-visible { outline-color: #FFFFFF; outline-offset: 0; }
+    .acik-ad {
+      margin-left: auto;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 600;
+      font-size: 16px;
+    }
+    /* Uygulama yüklenirken üst çubuğun altında akan altın çizgi */
+    .yukleniyor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -3px;
+      height: 3px;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .yukleniyor::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 40%;
+      background: var(--dugum);
+      animation: ak 1.1s ease-in-out infinite;
+    }
+    @keyframes ak { from { left: -40%; } to { left: 100%; } }
+    .goruntuleyici iframe {
+      flex: 1;
+      width: 100%;
+      border: 0;
+      background: #FFFFFF;
+    }
+
+    /* ================= Bildirim ================= */
+    .bildirim {
+      position: fixed;
+      left: 50%;
+      bottom: calc(80px + env(safe-area-inset-bottom));
+      z-index: 30;
+      max-width: min(560px, calc(100% - 32px));
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: var(--bildirim-zemin);
+      color: var(--bildirim-yazi);
+      font-size: 15px;
+      transform: translate(-50%, 12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms, transform 180ms;
+    }
+    .bildirim.gorunur { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 420px) {
+      .sayfa { padding-left: 16px; padding-right: 16px; }
+      .baslik { gap: 12px; margin-bottom: 24px; }
+      .logo { width: 48px; height: 48px; }
+      .hat li { padding-left: 38px; }
+      .hat li::before { width: 25px; }
+      .kart { gap: 12px; padding: 12px; }
+      .kart .simge { width: 42px; height: 42px; }
+      .dugme { min-width: 68px; padding: 8px 14px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hat li::after, .bildirim { transition: none; }
+      .yukleniyor::before { animation: none; left: 0; width: 100%; opacity: .6; }
+      .kutucuk:active .simge { transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <div id="kabuk">
+    <div class="sayfa">
+      <header class="baslik">
+        <!-- logo.png bu klasöre konursa burada görünür; yoksa kendiliğinden gizlenir -->
+        <img class="logo" src="logo.png" alt="Niğde Belediyesi logosu" onerror="this.remove()">
+        <div>
+          <p class="kurum">Niğde Belediyesi Su ve Kanalizasyon Müdürlüğü</p>
+          <h1 id="sekme-basligi">Uygulamalarım</h1>
+        </div>
+      </header>
+
+      <main>
+        <!-- Telefona yükleme şeridi. Sadece tarayıcıdan açılınca ve yüklenebilir olduğunda görünür. -->
+        <div class="yukle-serit" id="yukle-serit" hidden>
+          <img src="simge-192.png" alt="">
+          <div class="yazi">
+            <strong id="yukle-baslik">Telefona yükleyin</strong>
+            <span id="yukle-aciklama">Ana ekrandan tek dokunuşla açılır.</span>
+          </div>
+          <div class="eylemler">
+            <button type="button" class="dugme" id="yukle-dugme">Yükle</button>
+            <button type="button" class="dugme-yazi" id="yukle-kapat">Şimdi değil</button>
+          </div>
+        </div>
+
+        <section id="bolum-benim" aria-labelledby="sekme-basligi"></section>
+        <section id="bolum-magaza" aria-labelledby="sekme-basligi" hidden></section>
+      </main>
+    </div>
+
+    <nav class="alt-menu" aria-label="Bölümler">
+      <div class="alt-menu-ic">
+        <button type="button" data-sekme="benim">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1.8"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1.8"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1.8"/></svg>
+          <span>Uygulamalarım</span>
+        </button>
+        <button type="button" data-sekme="magaza">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 9h15l-1.2 10.2a1.5 1.5 0 0 1-1.5 1.3H7.2a1.5 1.5 0 0 1-1.5-1.3Z"/><path d="M8.5 9V7.5a3.5 3.5 0 0 1 7 0V9"/></svg>
+          <span>Mağaza</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Uygulama açılınca tüm ekranı kaplayan alan -->
+  <div class="goruntuleyici" id="goruntuleyici" hidden>
+    <div class="ust-cubuk">
+      <button type="button" class="geri" id="geri">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 5-7 7 7 7"/></svg>
+        <span>Uygulamalar</span>
+      </button>
+      <span class="acik-ad" id="acik-ad"></span>
+      <div class="yukleniyor" id="yukleniyor" hidden></div>
+    </div>
+  </div>
+
+  <div class="bildirim" id="bildirim" role="status" aria-live="polite"></div>
+
+  <!-- Uygulama listesi. Yeni uygulama eklemek için sadece bu dosya düzenlenir. -->
+  <script src="uygulamalar.js"></script>
+
+  <script>
+    // =====================================================================
+    //  Simgeler: uygulamalar.js içindeki "simge" alanına yazılan adla eşleşir.
+    // =====================================================================
+    const SIMGELER = {
+      saat:   '<circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/>',
+      kutu:   '<path d="M3.5 8 12 3.5 20.5 8v8L12 20.5 3.5 16Z"/><path d="M3.5 8 12 12.5 20.5 8M12 12.5v8"/>',
+      harita: '<path d="M12 21s-6.5-6-6.5-11a6.5 6.5 0 0 1 13 0c0 5-6.5 11-6.5 11Z"/><circle cx="12" cy="10" r="2.3"/>',
+      hesap:  '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7h7M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01M8.5 15h.01M12 15h.01M15.5 15h.01M8.5 18h.01M12 18h3.5"/>',
+      ekran:  '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M9 20h6M12 16v4"/>',
+      belge:  '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5M9 13h6M9 17h4"/>',
+      su:     '<path d="M12 3.5s-6 6.6-6 10.8a6 6 0 0 0 12 0c0-4.2-6-10.8-6-10.8Z"/>',
+      kalkan: '<path d="M12 3 4.5 6v5.5c0 4.4 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5.1 7.5-9.5V6Z"/><path d="m9 12 2 2 4-4"/>'
+    };
+    const DISARI_SIMGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
+
+    // =====================================================================
+    //  Kim neyi indirdi: her telefonun kendi hafızasında tutulur.
+    //  Tarayıcı hafızayı kullandırmazsa (gizli sekme vb.) sayfa açık kaldığı
+    //  sürece çalışır, kapatınca unutur.
+    // =====================================================================
+    const HAFIZA_ANAHTARI = 'uygulamalar.indirilenler';
+
+    function hafizadanOku() {
+      try {
+        const deger = JSON.parse(localStorage.getItem(HAFIZA_ANAHTARI) || '[]');
+        return Array.isArray(deger) ? deger.filter(function (x) { return typeof x === 'string'; }) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+    function hafizayaYaz(liste) {
+      try { localStorage.setItem(HAFIZA_ANAHTARI, JSON.stringify(liste)); } catch (e) { /* hafıza kapalı */ }
+    }
+
+    // =====================================================================
+    //  Listeyi uygulamalar.js'ten okuyup kontrol et
+    // =====================================================================
+    let katalog = [];          // Mağazadaki geçerli uygulamalar
+    let listeHatasi = false;   // uygulamalar.js okunamadıysa true
+
+    (function katalogHazirla() {
+      if (typeof UYGULAMALAR === 'undefined' || !Array.isArray(UYGULAMALAR)) {
+        listeHatasi = true;
+        return;
+      }
+      const gorulen = new Set();
+      UYGULAMALAR.forEach(function (u) {
+        if (!u || !u.ad || !u.link) {
+          console.warn('Adı ya da linki eksik olduğu için gösterilmedi:', u);
+          return;
+        }
+        const ad = String(u.ad).trim();
+        if (gorulen.has(ad)) {
+          console.warn('Aynı adla ikinci kez yazıldığı için gösterilmedi:', ad);
+          return;
+        }
+        gorulen.add(ad);
+        katalog.push({
+          ad: ad,
+          aciklama: u.aciklama ? String(u.aciklama) : '',
+          link: String(u.link).trim(),
+          simge: String(u.simge || '').trim().toLocaleLowerCase('tr-TR'),
+          disarida: u.disarida === true
+        });
+      });
+    })();
+
+    function uygulamaBul(ad) {
+      return katalog.find(function (u) { return u.ad === ad; });
+    }
+
+    // İndirilenler: listeden kaldırılmış eski uygulamalar atılır
+    let indirilenler = hafizadanOku().filter(function (ad) { return uygulamaBul(ad); });
+
+    function indirildiMi(ad) { return indirilenler.indexOf(ad) !== -1; }
+
+    // =====================================================================
+    //  Yardımcılar
+    // =====================================================================
+    const el = function (etiket, sinif, yazi) {
+      const e = document.createElement(etiket);
+      if (sinif) e.className = sinif;
+      if (yazi !== undefined) e.textContent = yazi;
+      return e;
+    };
+
+    function simgeOlustur(u) {
+      const s = el('span', 'simge');
+      s.setAttribute('aria-hidden', 'true');
+      const cizim = SIMGELER[u.simge];
+      if (cizim) {
+        s.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' + cizim + '</svg>';
+      } else {
+        s.textContent = u.ad.charAt(0).toLocaleUpperCase('tr-TR');
+      }
+      return s;
+    }
+
+    let bildirimZamani = null;
+    function bildir(yazi) {
+      const b = document.getElementById('bildirim');
+      b.textContent = yazi;
+      b.classList.add('gorunur');
+      clearTimeout(bildirimZamani);
+      bildirimZamani = setTimeout(function () { b.classList.remove('gorunur'); }, 2800);
+    }
+
+    function hataKutusu() {
+      const k = el('div', 'bos');
+      k.appendChild(el('strong', '', 'Uygulama listesi okunamadı.'));
+      k.appendChild(el('p', '', 'uygulamalar.js dosyasında eksik bir tırnak, virgül ya da parantez olabilir. Son yaptığınız değişikliği kontrol edin.'));
+      return k;
+    }
+
+    // =====================================================================
+    //  Uygulamalarım bölümü
+    // =====================================================================
+    function benimCiz() {
+      const bolum = document.getElementById('bolum-benim');
+      bolum.innerHTML = '';
+      if (listeHatasi) { bolum.appendChild(hataKutusu()); return; }
+
+      if (indirilenler.length === 0) {
+        const k = el('div', 'bos');
+        k.appendChild(el('strong', '', 'Henüz uygulama indirmediniz.'));
+        k.appendChild(el('p', '', 'Mağaza\'dan indirdiğiniz uygulamalar burada durur, buradan açılır.'));
+        const d = el('button', 'dugme', 'Mağaza\'ya git');
+        d.type = 'button';
+        d.addEventListener('click', function () { sekmeGoster('magaza', true); });
+        const p = el('p'); p.appendChild(d); k.appendChild(p);
+        bolum.appendChild(k);
+        return;
+      }
+
+      const ul = el('ul', 'izgara');
+      indirilenler.forEach(function (ad) {
+        const u = uygulamaBul(ad);
+        const li = el('li');
+        const b = el('button', 'kutucuk');
+        b.type = 'button';
+        b.dataset.ad = u.ad;
+        b.setAttribute('aria-label', u.disarida ? u.ad + ', Chrome\'da açılır' : u.ad);
+        const s = simgeOlustur(u);
+        if (u.disarida) {
+          const i = el('span', 'disari-isaret');
+          i.innerHTML = DISARI_SIMGE;
+          s.appendChild(i);
+        }
+        b.appendChild(s);
+        b.appendChild(el('span', 'kutucuk-ad', u.ad));
+        b.addEventListener('click', function () { uygulamaAc(u, b); });
+        li.appendChild(b);
+        ul.appendChild(li);
+      });
+      bolum.appendChild(ul);
+    }
+
+    // =====================================================================
+    //  Mağaza bölümü
+    // =====================================================================
+    function magazaCiz() {
+      const bolum = document.getElementById('bolum-magaza');
+      bolum.innerHTML = '';
+      if (listeHatasi) { bolum.appendChild(hataKutusu()); return; }
+      if (katalog.length === 0) {
+        const k = el('div', 'bos');
+        k.appendChild(el('strong', '', 'Mağaza boş.'));
+        k.appendChild(el('p', '', 'Uygulama eklemek için uygulamalar.js dosyasındaki listeye bir blok yazın.'));
+        bolum.appendChild(k);
+        return;
+      }
+
+      const ul = el('ul', 'hat');
+      katalog.forEach(function (u) {
+        const var_ = indirildiMi(u.ad);
+        const li = el('li', var_ ? 'indirildi' : '');
+        li.dataset.ad = u.ad;
+
+        const kart = el('div', 'kart');
+        kart.appendChild(simgeOlustur(u));
+
+        const yazi = el('div', 'yazi');
+        yazi.appendChild(el('span', 'ad', u.ad));
+        if (u.aciklama) yazi.appendChild(el('span', 'aciklama', u.aciklama));
+        if (u.disarida) yazi.appendChild(el('span', 'not', 'Chrome\'da açılır'));
+        kart.appendChild(yazi);
+
+        const eylem = el('div', 'eylemler');
+        if (var_) {
+          const ac = el('button', 'dugme dugme-acik', 'Aç');
+          ac.type = 'button';
+          ac.setAttribute('aria-label', u.ad + ' uygulamasını aç');
+          ac.addEventListener('click', function () { uygulamaAc(u, ac); });
+          const kaldir = el('button', 'dugme-yazi', 'Kaldır');
+          kaldir.type = 'button';
+          kaldir.setAttribute('aria-label', u.ad + ' uygulamasını kaldır');
+          kaldir.addEventListener('click', function () { kaldirUygulama(u); });
+          eylem.appendChild(ac);
+          eylem.appendChild(kaldir);
+        } else {
+          const indir = el('button', 'dugme', 'İndir');
+          indir.type = 'button';
+          indir.setAttribute('aria-label', u.ad + ' uygulamasını indir');
+          indir.addEventListener('click', function () { indirUygulama(u); });
+          eylem.appendChild(indir);
+        }
+        kart.appendChild(eylem);
+
+        li.appendChild(kart);
+        ul.appendChild(li);
+      });
+      bolum.appendChild(ul);
+    }
+
+    function magazadaOdakla(ad, sinif) {
+      const li = Array.prototype.find.call(document.querySelectorAll('#bolum-magaza li'), function (x) { return x.dataset.ad === ad; });
+      const d = li && li.querySelector(sinif);
+      if (d) d.focus();
+    }
+
+    function indirUygulama(u) {
+      if (!indirildiMi(u.ad)) indirilenler.push(u.ad);
+      hafizayaYaz(indirilenler);
+      benimCiz();
+      magazaCiz();
+      magazadaOdakla(u.ad, '.dugme');
+      bildir(u.ad + ' indirildi. Uygulamalarım\'dan açabilirsiniz.');
+    }
+
+    function kaldirUygulama(u) {
+      indirilenler = indirilenler.filter(function (ad) { return ad !== u.ad; });
+      hafizayaYaz(indirilenler);
+      benimCiz();
+      magazaCiz();
+      magazadaOdakla(u.ad, '.dugme');
+      bildir(u.ad + ' kaldırıldı.');
+    }
+
+    // =====================================================================
+    //  Sekmeler (alt menü)
+    // =====================================================================
+    const SEKME_BASLIK = { benim: 'Uygulamalarım', magaza: 'Mağaza' };
+
+    function sekmeGoster(sekme, odakla) {
+      document.getElementById('bolum-benim').hidden = sekme !== 'benim';
+      document.getElementById('bolum-magaza').hidden = sekme !== 'magaza';
+      document.getElementById('sekme-basligi').textContent = SEKME_BASLIK[sekme];
+      document.querySelectorAll('.alt-menu button').forEach(function (b) {
+        if (b.dataset.sekme === sekme) b.setAttribute('aria-current', 'page');
+        else b.removeAttribute('aria-current');
+      });
+      window.scrollTo(0, 0);
+      if (odakla) {
+        const ilk = document.querySelector(sekme === 'benim' ? '#bolum-benim button' : '#bolum-magaza button');
+        if (ilk) ilk.focus();
+      }
+    }
+    document.querySelectorAll('.alt-menu button').forEach(function (b) {
+      b.addEventListener('click', function () { sekmeGoster(b.dataset.sekme); });
+    });
+
+    // =====================================================================
+    //  Uygulamayı açma / kapatma
+    //  Uygulama, Uygulamalar'ın içinde tam ekran açılır. Telefonun geri tuşu
+    //  önce uygulamanın içinde geri gider, en başa gelince listeye döner.
+    //  Üstteki "Uygulamalar" düğmesi doğrudan listeye döner.
+    // =====================================================================
+    const goruntuleyici = document.getElementById('goruntuleyici');
+    const kabuk = document.getElementById('kabuk');
+    let acikUygulama = null;
+    let acanDugme = null;
+    let acilistakiUzunluk = 0;
+
+    function uygulamaAc(u, dugme) {
+      if (navigator.onLine === false) {
+        bildir('İnternet bağlantısı yok. Uygulamalar internetle çalışır.');
+        return;
+      }
+      if (u.disarida) {
+        window.open(u.link, '_blank', 'noopener');
+        return;
+      }
+
+      acikUygulama = u;
+      acanDugme = dugme || null;
+      document.getElementById('acik-ad').textContent = u.ad;
+
+      const yukleniyor = document.getElementById('yukleniyor');
+      yukleniyor.hidden = false;
+
+      const cerceve = document.createElement('iframe');
+      cerceve.title = u.ad;
+      cerceve.src = u.link;
+      cerceve.setAttribute('allow', 'clipboard-write; fullscreen; camera; geolocation');
+      cerceve.addEventListener('load', function () { yukleniyor.hidden = true; });
+      goruntuleyici.appendChild(cerceve);
+
+      goruntuleyici.hidden = false;
+      kabuk.inert = true;
+      document.body.classList.add('uygulama-acik');
+
+      // Geri tuşu için tarayıcı geçmişine bir adım ekle
+      history.pushState({ uygulama: u.ad }, '');
+      acilistakiUzunluk = history.length;
+
+      document.getElementById('geri').focus();
+    }
+
+    function uygulamayiKapat() {
+      if (!acikUygulama) return;
+      acikUygulama = null;
+      const cerceve = goruntuleyici.querySelector('iframe');
+      if (cerceve) cerceve.remove();
+      goruntuleyici.hidden = true;
+      kabuk.inert = false;
+      document.body.classList.remove('uygulama-acik');
+      if (acanDugme && document.body.contains(acanDugme)) acanDugme.focus();
+    }
+
+    // Telefonun geri tuşu ya da tarayıcının geri düğmesi
+    window.addEventListener('popstate', function () {
+      if (acikUygulama) uygulamayiKapat();
+    });
+
+    // Üstteki "Uygulamalar" düğmesi: kapat ve uygulamanın içinde gezilen
+    // adımları geçmişten geri sar, böylece geri tuşu bir sonraki basışta
+    // boşa gitmez.
+    document.getElementById('geri').addEventListener('click', function () {
+      const adim = history.length - acilistakiUzunluk + 1;
+      uygulamayiKapat();
+      if (adim > 0) history.go(-adim);
+    });
+
+    // =====================================================================
+    //  Telefona yükleme
+    //  Android (Chrome): tarayıcı "yüklenebilir" dediğinde şerit ve "Yükle"
+    //  düğmesi çıkar; düğme telefonun kendi yükleme penceresini açar.
+    //  iPhone (Safari): otomatik yükleme yok, şerit kısa tarifi gösterir.
+    //  Uygulamalar zaten ana ekrandan açıldıysa şerit hiç görünmez.
+    // =====================================================================
+    const seritEl = document.getElementById('yukle-serit');
+    const yukluMu = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const iPhoneMu = /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const dokunmatik = window.matchMedia('(pointer: coarse)').matches;
+    let yuklemeOlayi = null;
+
+    function seritKapatildiMi() {
+      try { return sessionStorage.getItem('uygulamalar.yukleKapat') === '1'; } catch (e) { return false; }
+    }
+    function seritGoster() {
+      if (yukluMu || seritKapatildiMi()) return;
+      seritEl.hidden = false;
+    }
+    function seritGizle() { seritEl.hidden = true; }
+
+    if (!dokunmatik) {
+      document.getElementById('yukle-baslik').textContent = 'Bilgisayara yükleyin';
+      document.getElementById('yukle-aciklama').textContent = 'Masaüstünden tek tıkla açılır.';
+    }
+
+    window.addEventListener('beforeinstallprompt', function (olay) {
+      olay.preventDefault();           // tarayıcının kendi küçük çubuğu yerine bizim şeridimiz
+      yuklemeOlayi = olay;
+      document.getElementById('yukle-dugme').hidden = false;
+      seritGoster();
+    });
+
+    window.addEventListener('appinstalled', function () {
+      yuklemeOlayi = null;
+      seritGizle();
+      bildir(dokunmatik ? 'Uygulamalar yüklendi. Ana ekrandan açabilirsiniz.' : 'Uygulamalar yüklendi.');
+    });
+
+    document.getElementById('yukle-dugme').addEventListener('click', function () {
+      if (!yuklemeOlayi) return;
+      yuklemeOlayi.prompt();
+      yuklemeOlayi.userChoice.then(function () { yuklemeOlayi = null; seritGizle(); });
+    });
+
+    document.getElementById('yukle-kapat').addEventListener('click', function () {
+      try { sessionStorage.setItem('uygulamalar.yukleKapat', '1'); } catch (e) { /* önemli değil */ }
+      seritGizle();
+    });
+
+    if (iPhoneMu && !yukluMu) {
+      document.getElementById('yukle-baslik').textContent = 'Telefona ekleyin';
+      document.getElementById('yukle-aciklama').textContent = 'Alttaki Paylaş düğmesine, sonra "Ana Ekrana Ekle"ye dokunun.';
+      document.getElementById('yukle-dugme').hidden = true;
+      document.getElementById('yukle-kapat').textContent = 'Kapat';
+      seritGoster();
+    }
+
+    // =====================================================================
+    //  Başlangıç
+    // =====================================================================
+    benimCiz();
+    magazaCiz();
+    sekmeGoster(indirilenler.length > 0 ? 'benim' : 'magaza');
+
+    // Servis çalışanı: telefona yüklenebilmesi ve internetsiz açılabilmesi için
+    if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('sw.js').catch(function (e) { console.warn('Servis çalışanı kurulamadı:', e); });
+      });
+    }
+  </script>
+</body>
+</html>
