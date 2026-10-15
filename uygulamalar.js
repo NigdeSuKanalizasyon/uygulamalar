@@ -16,7 +16,7 @@
     aciklama  : Adın altındaki kısa açıklama (tek satır yeterli).
     link      : Uygulamanın adresi. https:// ile başlamalı.
     simge     : Uygulamanın resmi. Şunlardan birini yazın:
-                saat, kutu, harita, hesap, ekran, belge, su, kalkan
+                saat, kutu, harita, hesap, ekran, belge, su, kalkan, qr
                 Başka bir şey yazarsanız uygulama adının ilk harfi görünür.
     disarida  : İsteğe bağlı. true yazarsanız uygulama, Uygulamalar'ın içinde değil
                 Chrome'da açılır. Uygulamanın kendi güvenlik ayarı başka bir sayfanın
@@ -44,5 +44,11 @@ const UYGULAMALAR = [
     simge: "kutu",
     // Envanter başka bir sayfanın içinde gösterilmeye izin vermiyor, Chrome'da açılır.
     disarida: true,
+  },
+  {
+    ad: "QR Sistemi",
+    aciklama: "Kuyu ve depo bilgi kartları, QR etiketleri",
+    link: "https://kuyudepokayit.anbe01.workers.dev/ekle.html",
+    simge: "qr",
   },
 ];

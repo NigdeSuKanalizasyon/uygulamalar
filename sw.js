@@ -12,7 +12,7 @@
   Sadece bu klasörün dosyalarına karışır. İçeride açılan uygulamalara dokunmaz.
 */
 
-const ONBELLEK = "uygulamalar-v4";
+const ONBELLEK = "uygulamalar-v5";
 const DOSYALAR = [
   "./",
   "./index.html",
