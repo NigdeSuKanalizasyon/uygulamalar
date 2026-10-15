@@ -34,7 +34,7 @@ const UYGULAMALAR = [
   {
     ad: "Fazla Mesai",
     aciklama: "Fazla mesai girişi ve çizelge çıktısı",
-    link: "https://nigdesukanalizasyon.github.io/mesai-takip/",
+    link: "https://nigdesukanalizasyon.github.io/fazla-mesai/",
     simge: "saat",
   },
   {

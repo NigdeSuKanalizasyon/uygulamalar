@@ -818,7 +818,7 @@
       const cerceve = document.createElement('iframe');
       cerceve.title = u.ad;
       cerceve.src = u.link;
-      cerceve.setAttribute('allow', 'clipboard-write; fullscreen; camera; geolocation');
+      cerceve.setAttribute('allow', 'clipboard-write; fullscreen; camera; geolocation; web-share');
       cerceve.addEventListener('load', function () { yukleniyor.hidden = true; });
       goruntuleyici.appendChild(cerceve);
 
