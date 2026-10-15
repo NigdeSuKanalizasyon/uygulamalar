@@ -12,14 +12,17 @@
   Sadece bu klasörün dosyalarına karışır. İçeride açılan uygulamalara dokunmaz.
 */
 
-const ONBELLEK = "uygulamalar-v1";
+const ONBELLEK = "uygulamalar-v2";
 const DOSYALAR = [
   "./",
   "./index.html",
   "./uygulamalar.js",
   "./manifest.webmanifest",
+  "./simge-180.png",
   "./simge-192.png",
   "./simge-512.png",
+  "./simge-512-maskable.png",
+  "./logo.png",
 ];
 
 // Kurulumda dosyaların kopyası alınır

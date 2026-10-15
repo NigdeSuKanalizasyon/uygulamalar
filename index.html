@@ -87,9 +87,10 @@
       gap: 14px;
       margin-bottom: 28px;
     }
-    /* Logo kendi renkleriyle durur; koyu temada beyaz bir zemin üstünde gösterilir */
+    /* Logo kendi renkleriyle durur (renklerine dokunulmaz); her temada beyaz bir plaka üstünde
+       gösterilir. Logo yatay olduğu için genişliği yüksekliğine göre kendiliğinden ayarlanır. */
     .logo {
-      width: 56px;
+      width: auto;
       height: 56px;
       object-fit: contain;
       flex: none;
@@ -295,6 +296,7 @@
       width: 48px;
       height: 48px;
       border-radius: 12px;
+      border: 1px solid var(--cizgi); /* simge beyaz; açık zeminde kenarı belli olsun */
     }
     .yukle-serit .yazi strong { display: block; font-size: 16px; line-height: 1.25; }
     .yukle-serit .yazi span { display: block; margin-top: 2px; font-size: 14px; color: var(--soluk); }
@@ -447,7 +449,7 @@
     @media (max-width: 420px) {
       .sayfa { padding-left: 16px; padding-right: 16px; }
       .baslik { gap: 12px; margin-bottom: 24px; }
-      .logo { width: 48px; height: 48px; }
+      .logo { height: 48px; }
       .hat li { padding-left: 38px; }
       .hat li::before { width: 25px; }
       .kart { gap: 12px; padding: 12px; }
@@ -466,7 +468,7 @@
   <div id="kabuk">
     <div class="sayfa">
       <header class="baslik">
-        <!-- logo.png bu klasöre konursa burada görünür; yoksa kendiliğinden gizlenir -->
+        <!-- Niğde Belediyesi logosu (aslı, renklerine dokunulmadan). Dosya yoksa kendiliğinden gizlenir. -->
         <img class="logo" src="logo.png" alt="Niğde Belediyesi logosu" onerror="this.remove()">
         <div>
           <p class="kurum">Niğde Belediyesi Su ve Kanalizasyon Müdürlüğü</p>
