@@ -20,9 +20,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 
   <style>
-    /* ================= Renkler ================= */
+    /* ================= Renkler =================
+       Zemin, Niğde Belediyesi logosunun beyazı. Sayfa her zaman açık renkte kalır
+       (telefon/bilgisayar koyu temada olsa da); logo beyaz zeminde aslıyla durur. */
     :root {
-      --zemin: #F3F6F4;
+      --zemin: #FFFFFF;
       --yuzey: #FFFFFF;
       --murekkep: #16302B;
       --soluk: #5A6E68;
@@ -37,25 +39,6 @@
       --bildirim-zemin: #16302B;
       --bildirim-yazi: #FFFFFF;
       color-scheme: light;
-    }
-    @media (prefers-color-scheme: dark) {
-      :root {
-        --zemin: #0F1C19;
-        --yuzey: #152622;
-        --murekkep: #E6EEEA;
-        --soluk: #9DB0A9;
-        --boru: #3FA27A;
-        --dugum: #D9B04A;
-        --cizgi: #24392F;
-        --vurgu-zemin: #1B3029;
-        --simge-zemin: #1F6B4F;
-        --dugme-zemin: #3FA27A;
-        --dugme-yazi: #0F1C19;
-        --odak: #6CB8D8;
-        --bildirim-zemin: #E6EEEA;
-        --bildirim-yazi: #0F1C19;
-        color-scheme: dark;
-      }
     }
 
     * { box-sizing: border-box; }
@@ -87,16 +70,13 @@
       gap: 14px;
       margin-bottom: 28px;
     }
-    /* Logo kendi renkleriyle durur (renklerine dokunulmaz); her temada beyaz bir plaka üstünde
-       gösterilir. Logo yatay olduğu için genişliği yüksekliğine göre kendiliğinden ayarlanır. */
+    /* Logo kendi renkleriyle, sayfanın beyaz zemininde durur (renklerine dokunulmaz).
+       Logo yatay olduğu için genişliği yüksekliğine göre kendiliğinden ayarlanır. */
     .logo {
       width: auto;
       height: 56px;
       object-fit: contain;
       flex: none;
-      background: #FFFFFF;
-      border-radius: 14px;
-      padding: 5px;
     }
     .kurum {
       margin: 0 0 2px;
@@ -153,21 +133,6 @@
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
-    /* Chrome'da açılan uygulamanın köşesindeki küçük işaret */
-    .disari-isaret {
-      position: absolute;
-      right: -6px;
-      top: -6px;
-      width: 24px;
-      height: 24px;
-      display: grid;
-      place-items: center;
-      border-radius: 50%;
-      background: var(--yuzey);
-      color: var(--murekkep);
-      box-shadow: 0 0 0 2px var(--zemin);
-    }
-    .disari-isaret svg { width: 14px; height: 14px; }
 
     /* ---------- Mağaza: ana borudan ayrılan kollar ---------- */
     .hat {
@@ -540,7 +505,6 @@
       su:     '<path d="M12 3.5s-6 6.6-6 10.8a6 6 0 0 0 12 0c0-4.2-6-10.8-6-10.8Z"/>',
       kalkan: '<path d="M12 3 4.5 6v5.5c0 4.4 3.2 8.2 7.5 9.5 4.3-1.3 7.5-5.1 7.5-9.5V6Z"/><path d="m9 12 2 2 4-4"/>'
     };
-    const DISARI_SIMGE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></svg>';
 
     // =====================================================================
     //  Kim neyi indirdi: her telefonun kendi hafızasında tutulur.
@@ -669,13 +633,7 @@
         b.type = 'button';
         b.dataset.ad = u.ad;
         b.setAttribute('aria-label', u.disarida ? u.ad + ', Chrome\'da açılır' : u.ad);
-        const s = simgeOlustur(u);
-        if (u.disarida) {
-          const i = el('span', 'disari-isaret');
-          i.innerHTML = DISARI_SIMGE;
-          s.appendChild(i);
-        }
-        b.appendChild(s);
+        b.appendChild(simgeOlustur(u));
         b.appendChild(el('span', 'kutucuk-ad', u.ad));
         b.addEventListener('click', function () { uygulamaAc(u, b); });
         li.appendChild(b);
