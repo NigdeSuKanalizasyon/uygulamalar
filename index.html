@@ -28,7 +28,7 @@
       --yuzey: #FFFFFF;
       --murekkep: #16302B;
       --soluk: #5A6E68;
-      --boru: #1F6B4F;          /* ana yeşil: boru hattı, seçili sekme */
+      --boru: #1F6B4F;          /* ana yeşil: seçili sekme, bağlantılar */
       --dugum: #C49A2C;         /* altın: bağlantı noktaları */
       --cizgi: #D5DED9;
       --vurgu-zemin: #E6F0EB;
@@ -134,49 +134,13 @@
       overflow: hidden;
     }
 
-    /* ---------- Mağaza: ana borudan ayrılan kollar ---------- */
-    .hat {
+    /* ---------- Mağaza: alt alta kartlar ---------- */
+    .magaza-liste {
       list-style: none;
       margin: 0;
-      padding: 8px 0;
-      position: relative;
+      padding: 0;
     }
-    .hat::before {
-      content: "";
-      position: absolute;
-      left: 11px;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      border-radius: 2px;
-      background: var(--boru);
-    }
-    .hat li { position: relative; padding-left: 44px; }
-    .hat li + li { margin-top: 12px; }
-    .hat li::before {               /* kol */
-      content: "";
-      position: absolute;
-      left: 13px;
-      top: 50%;
-      width: 31px;
-      height: 4px;
-      margin-top: -2px;
-      background: var(--boru);
-    }
-    .hat li::after {                /* düğüm: içi boş = indirilmedi, dolu = indirildi */
-      content: "";
-      position: absolute;
-      left: 5px;
-      top: 50%;
-      width: 16px;
-      height: 16px;
-      margin-top: -8px;
-      border-radius: 50%;
-      background: var(--zemin);
-      border: 4px solid var(--dugum);
-      transition: background-color 240ms;
-    }
-    .hat li.indirildi::after { background: var(--dugum); }
+    .magaza-liste li + li { margin-top: 12px; }
 
     .kart {
       display: flex;
@@ -415,15 +379,13 @@
       .sayfa { padding-left: 16px; padding-right: 16px; }
       .baslik { gap: 12px; margin-bottom: 24px; }
       .logo { height: 48px; }
-      .hat li { padding-left: 38px; }
-      .hat li::before { width: 25px; }
       .kart { gap: 12px; padding: 12px; }
       .kart .simge { width: 42px; height: 42px; }
       .dugme { min-width: 68px; padding: 8px 14px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hat li::after, .bildirim { transition: none; }
+      .bildirim { transition: none; }
       .yukleniyor::before { animation: none; left: 0; width: 100%; opacity: .6; }
       .kutucuk:active .simge { transform: none; }
     }
@@ -657,7 +619,7 @@
         return;
       }
 
-      const ul = el('ul', 'hat');
+      const ul = el('ul', 'magaza-liste');
       katalog.forEach(function (u) {
         const var_ = indirildiMi(u.ad);
         const li = el('li', var_ ? 'indirildi' : '');
