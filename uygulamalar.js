@@ -51,4 +51,10 @@ const UYGULAMALAR = [
     link: "https://kuyudepokayit.anbe01.workers.dev/ekle.html",
     simge: "qr",
   },
+    {
+    ad: "Nokta Harita",
+    aciklama: "Kuyu, depo ve terfi istasyonlarının konumları",
+    link: "https://nigdesukanalizasyon.github.io/istasyon-haritasi/",
+    simge: "harita",
+  },
 ];
